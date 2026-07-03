@@ -1,4 +1,5 @@
 import bcrypt
+from fastapi import HTTPException
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
 import os

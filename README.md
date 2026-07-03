@@ -1,61 +1,191 @@
-# HelpDesk Simples
+# 🛠️ HelpDesk Simples
 
-API REST para gerenciamento de tickets de suporte técnico, desenvolvida com FastAPI e PostgreSQL.
+API REST para gerenciamento de tickets de suporte técnico, desenvolvida com **FastAPI**, **SQLAlchemy** e **PostgreSQL**.
 
-## 🚀 Tecnologias
+Este projeto foi criado com foco em aprendizado de desenvolvimento Back-end utilizando Python, aplicando conceitos de arquitetura em camadas, autenticação JWT e boas práticas de organização de código.
+
+---
+
+# 🚀 Tecnologias
 
 - Python 3.13
 - FastAPI
 - SQLAlchemy
 - PostgreSQL (Neon)
 - Pydantic
-- python-jose
+- Uvicorn
+- python-jose (JWT)
 - bcrypt
 
-## 📋 Funcionalidades
+---
 
-- Criar ticket de atendimento
-- Listar todos os tickets
-- Atualizar status do ticket (aberto, em andamento, fechado)
-- Deletar ticket
-- Autenticação JWT
+# 🏗️ Arquitetura
 
-## 🖥️ Endpoints
+O projeto segue uma arquitetura em camadas, separando as responsabilidades da aplicação para facilitar manutenção, escalabilidade e organização do código.
 
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| POST | /tickets | Criar novo ticket |
-| GET | /tickets | Listar todos os tickets |
-| PATCH | /tickets/{id}/status | Atualizar status |
-| DELETE | /tickets/{id} | Deletar ticket |
-| POST | /auth/cadastro | Cadastrar usuário
-| POST | /auth/login | Login e geração de token JWT
+```text
+Cliente
+    │
+    ▼
+Router
+    │
+    ▼
+Service
+    │
+    ▼
+Repository
+    │
+    ▼
+PostgreSQL
+```
 
-## 📸 Preview
+### Responsabilidade de cada camada
 
-### Documentação da API
+- **Router:** recebe as requisições HTTP e direciona para a camada de serviço.
+- **Service:** contém toda a lógica de negócio da aplicação.
+- **Repository:** realiza todas as operações de acesso ao banco de dados.
+- **Models:** representam as tabelas do banco.
+- **Schemas:** validam os dados de entrada e saída da API.
+
+---
+
+# 📋 Funcionalidades
+
+- ✅ Cadastro de usuários
+- ✅ Login utilizando JWT
+- ✅ Criação de tickets
+- ✅ Listagem de tickets
+- ✅ Atualização do status dos tickets
+- ✅ Exclusão de tickets
+- ✅ Persistência utilizando PostgreSQL (Neon)
+
+---
+
+# 🖥️ Endpoints
+
+| Método | Endpoint | Descrição |
+|---------|----------|-----------|
+| POST | `/auth/cadastro` | Cadastro de usuário |
+| POST | `/auth/login` | Login e geração do token JWT |
+| POST | `/tickets` | Criar novo ticket |
+| GET | `/tickets` | Listar tickets |
+| PATCH | `/tickets/{id}/status` | Atualizar status do ticket |
+| DELETE | `/tickets/{id}` | Excluir ticket |
+
+---
+
+# 📂 Estrutura do Projeto
+
+```text
+app/
+│
+├── models/
+│   ├── models.py
+│   └── users.py
+│
+├── schemas/
+│
+├── routers/
+│   ├── auth_router.py
+│   └── ticket_router.py
+│
+├── services/
+│   └── ticket_service.py
+│
+├── repositories/
+│   └── ticket_repository.py
+│
+├── auth.py
+├── database.py
+└── main.py
+```
+
+---
+
+# 📸 Preview
+
+## Documentação (Swagger)
+
 ![Swagger](assets/swagger.jpg)
 
-### Banco de dados
+## Banco de Dados (Neon)
+
 ![Neon](assets/neon.jpg)
 
-## ⚙️ Como rodar localmente
+---
 
-1. Clone o repositório
-2. Instale as dependências
+# ⚙️ Executando o projeto
+
+## Clone o repositório
+
+```bash
+git clone https://github.com/vyctorrodrigues/helpdesk_simples.git
+```
+
+Entre na pasta do projeto
+
+```bash
+cd helpdesk_simples
+```
+
+Crie um ambiente virtual
+
+```bash
+python -m venv .venv
+```
+
+Ative o ambiente virtual
+
+### Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+Instale as dependências
+
 ```bash
 pip install -r requirements.txt
 ```
-3. Crie um arquivo `.env` na raiz com sua connection string do Neon e também será necessario adicionar SECRET_KEY dentro do arquivo.
-```env 
-DATABASE_URL=postgresql://usuario:senha@host/banco
-```
-4. Rode a aplicação
+
+Crie um arquivo `.env` na raiz do projeto
+
+Copie o arquivo `.env.example` para `.env` e preencha os valores:
+
 ```bash
-uvicorn main:app --reload
+cp .env.example .env
+
+Execute a aplicação
+
+```bash
+uvicorn app.main:app --reload
 ```
-5. Acesse `http://127.0.0.1:8000/docs`
 
-## 👨‍💻 Autor
+Acesse a documentação da API
 
-Vyctor Rodrigues — [GitHub](https://github.com/vyctorrodrigues)
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+# 📈 Próximas melhorias
+
+- Número público para identificação dos tickets
+- Comentários em tickets
+- Upload de anexos
+- Docker
+- Alembic (migrações)
+- Testes automatizados
+- Controle de permissões por usuário
+
+---
+
+# 👨‍💻 Autor
+
+**Vyctor Rodrigues**
+
+Estudante de Análise e Desenvolvimento de Sistemas, apaixonado por desenvolvimento Back-end e arquitetura de software.
+
+GitHub:
+https://github.com/vyctorrodrigues

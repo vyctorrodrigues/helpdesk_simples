@@ -1,18 +1,12 @@
 from fastapi import APIRouter, Depends,HTTPException
 from sqlalchemy.orm import Session
-from database import SessionLocal
-from models.users import User
-from schemas.schemas import UserCreate, UserResponse, TokenResponse
-from auth import criptografa_senha, verifica_senha, gerar_token_acesso
+from app.database import SessionLocal
+from app.models.users import User
+from app.database import get_db
+from app.schemas.schemas import UserCreate, UserResponse, TokenResponse
+from app.auth import criptografa_senha, verifica_senha, gerar_token_acesso
 
 router = APIRouter()
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @router.post("/auth/cadastro", response_model=UserResponse)
 def cadastro_usuario(usuario: UserCreate, db: Session = Depends(get_db)):

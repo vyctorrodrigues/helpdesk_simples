@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from uuid import UUID
+import uuid
 import datetime
 
 class TicketCreate(BaseModel):
@@ -9,7 +9,7 @@ class TicketCreate(BaseModel):
     descricao: str
 
 class TicketResponse(BaseModel):
-    id: int
+    id: uuid.UUID
     nome_empresa: str
     nome_pessoa: str
     local: str
@@ -25,7 +25,7 @@ class UserCreate(BaseModel):
     senha: str
 
 class UserResponse(BaseModel):
-    id: UUID
+    id: uuid.UUID
     email: str
 
     class Config:

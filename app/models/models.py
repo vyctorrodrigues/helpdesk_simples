@@ -1,12 +1,13 @@
-from sqlalchemy import Column, Integer, String, DateTime
-from database import Base
+import uuid
+from sqlalchemy import UUID, Column, String, DateTime
+from app.database import Base
 import datetime
 
 
 class Ticket(Base):
     __tablename__ = "tickets"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     nome_empresa = Column(String, nullable=False)
     nome_pessoa = Column(String, nullable=False)
     local = Column(String, nullable=False)

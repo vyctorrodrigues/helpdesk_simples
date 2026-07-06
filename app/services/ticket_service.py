@@ -11,8 +11,13 @@ def criar_ticket(ticket: TicketCreate, db: Session):
     novo_ticket = Ticket(**ticket.model_dump())
     return ticket_repository.salvar(novo_ticket, db)
 
-def listar_tickets(db: Session):
-    return ticket_repository.listar_tickets(db)
+def buscar_ticket_por_id(ticket_id: uuid.UUID, db: Session):
+    ticket = ticket_repository.buscar_por_id(db, ticket_id)
+
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Ticket não encontrado")
+    
+    return ticket
 
 def atualizar_status_ticket(ticket_id: uuid.UUID, novo_status: str, db: Session):
     ticket = ticket_repository.buscar_por_id(db, ticket_id)

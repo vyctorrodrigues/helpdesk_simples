@@ -25,17 +25,17 @@ O projeto segue uma arquitetura em camadas, separando as responsabilidades da ap
 
 ```text
 Cliente
-    │
-    ▼
+    │
+    ▼
 Router
-    │
-    ▼
+    │
+    ▼
 Service
-    │
-    ▼
+    │
+    ▼
 Repository
-    │
-    ▼
+    │
+    ▼
 PostgreSQL
 ```
 
@@ -80,20 +80,20 @@ PostgreSQL
 app/
 │
 ├── models/
-│   ├── models.py
-│   └── users.py
+│   ├── models.py
+│   └── users.py
 │
 ├── schemas/
 │
 ├── routers/
-│   ├── auth_router.py
-│   └── ticket_router.py
+│   ├── auth_router.py
+│   └── ticket_router.py
 │
 ├── services/
-│   └── ticket_service.py
+│   └── ticket_service.py
 │
 ├── repositories/
-│   └── ticket_repository.py
+│   └── ticket_repository.py
 │
 ├── auth.py
 ├── database.py
@@ -169,15 +169,38 @@ http://127.0.0.1:8000/docs
 
 ---
 
-# 📈 Próximas melhorias
+# ☁️ Infraestrutura AWS & CI/CD (DevOps)
 
-- Número público para identificação dos tickets
-- Comentários em tickets
-- Upload de anexos
-- Docker
-- Alembic (migrações)
-- Testes automatizados
-- Controle de permissões por usuário
+Além do desenvolvimento da API, a aplicação foi empacotada e implantada em uma infraestrutura resiliente, segura e automatizada na nuvem AWS.
+
+---
+
+### 🏛️ Arquitetura de Nuvem
+
+* **Servidor de Aplicação:** Instância **AWS EC2 (Ubuntu 24.04 LTS)** rodando a API via **Uvicorn** gerenciado como um serviço do sistema (**systemd**), garantindo alta disponibilidade e reinício automático.
+* **Proxy Reverso:** **Nginx** atuando na camada frontal para gerenciar as requisições, tratar conexões de rede e repassar o tráfego para a aplicação em `127.0.0.1:8000`.
+* **DNS & Criptografia:** Apontamento de domínio público via **DuckDNS** (`helpdesk-vyctor.duckdns.org`) com suporte a **HTTPS/TLS** e renovação automática de certificado gerenciada pelo **Certbot (Let's Encrypt)**.
+
+---
+
+### 🔒 Hardening & Práticas de Segurança
+
+* **Isolamento de Portas:** A porta nativa do FastAPI (`8000`) foi bloqueada no Security Group da AWS e restrita ao acesso local, permitindo tráfego externo exclusivamente pelas portas padrão web **80 (HTTP)** e **443 (HTTPS)**.
+* **Redirecionamento Seguro:** Nginx configurado para forçar todo o tráfego HTTP para HTTPS automaticamente.
+* **Gestão de Segredos:** Restrição de permissões de leitura do arquivo `.env` no servidor (`chmod 600`), garantindo acesso exclusivo ao usuário do sistema.
+* **Privilégios Mínimos:** Ajuste fino nas regras do `sudoers` na EC2, liberando execução sem senha unicamente para a instrução de reinício do serviço (`systemctl restart helpdesk`).
+
+---
+
+### 🚀 Esteira de CI/CD (GitHub Actions)
+
+Automação do fluxo de deploy contínuo configurada via `.github/workflows/deploy.yml`. A cada `push` na branch `main`:
+
+1. O **GitHub Actions** dispara o job automatizado em um ambiente virtualizado.
+2. Uma conexão criptografada via **SSH** é estabelecida com a instância EC2 utilizando chaves armazenadas no **GitHub Secrets** (`EC2_HOST`, `EC2_USERNAME`, `EC2_SSH_KEY`).
+3. O servidor navega até a pasta do projeto e atualiza o código fonte (`git pull origin main`).
+4. O ambiente virtual Python é ativado e as novas dependências do `requirements.txt` são instaladas.
+5. O serviço `helpdesk` é reiniciado de forma transparente via `systemd` sem indisponibilidade perceptível.
 
 ---
 
